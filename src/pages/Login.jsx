@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { UserAuth } from '../context/AuthContent';
 
 const Login = () => {
-  const [remLogin,setRemLogin] = useState(true)
+  const [errorMessage, setErrorMessage] = useState("")
   const [email,setEmail] = useState('')
   const [password,setPassword] = useState('')
 
@@ -13,13 +13,15 @@ const Login = () => {
 
   const handleFormSubmit = async(e)=> {
     e.preventDefault()
-    try {
-      await logIn(email,password)
-      navigate("/")
-    } catch (error) {
-      console.log(error)
-      setError("Invalid email or password");
-    }
+    setErrorMessage("");
+   
+      const result = await logIn(email,password)
+      if(result.success){
+          navigate("/")
+      }
+      else{
+        setErrorMessage(result.error || "Invalid email or password")
+      }
   }
   return (
     <>
@@ -57,6 +59,11 @@ const Login = () => {
                 <span className='text-gray-600 mr-2'>New to Netflix? </span>
                 <Link to="/signup">Sign up</Link>
               </p>
+              {errorMessage && (
+  <p className="text-sm text-red-600 mt-2">
+    {errorMessage}
+  </p>
+)}
             
             </form>
           </div>

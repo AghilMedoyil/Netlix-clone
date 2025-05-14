@@ -7,19 +7,24 @@ const Signup = () => {
   const [remLogin,setRemLogin] = useState(true)
   const [email,setEmail] = useState('')
   const [password,setPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState("");
 
   const { user,signUp } = UserAuth()
   const navigate = useNavigate()
 
+ 
+
   const handleFormSubmit = async(e)=> {
     e.preventDefault()
+    setErrorMessage("");
     
-    try {
-      await signUp(email,password)
-      navigate('/login')
-    } catch (err) {
-      console.log(err)
-    } 
+      const result = await signUp(email,password)
+      if(result.success){
+        navigate('/login')
+      }
+      else{
+        setErrorMessage(result.error || "Signup failed");
+      }
   }
   return (
     <>
@@ -57,7 +62,15 @@ const Signup = () => {
                 <span className='text-gray-600 mr-2'>Already subscribed to Netflix? </span>
                 <Link to="/login">Sign In</Link>
               </p>
-            
+{errorMessage && (
+  <p className="text-sm text-red-600 mt-2">
+    {errorMessage}
+  </p>
+)}
+
+
+
+
             </form>
           </div>
         </div>

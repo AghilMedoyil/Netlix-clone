@@ -20,12 +20,39 @@ export function AuthContextProvider({children}) {
     },[])
     
 
-    function signUp(email,password) {
-        createUserWithEmailAndPassword(auth,email,password)
+    async function signUp(email, password) {
+    try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        await signOut(auth);
+        return { success: true };
+    } catch (error) {
+
+        let errorMessage = "Signup failed!";
+        if (error.code === "auth/email-already-in-use") {
+        errorMessage = "Email already in use!";
+        }
+        else if (error.code === "auth/weak-password") {
+        errorMessage = "Password should be at least 6 characters!";
+        }
+        return { success: false, error: errorMessage };
     }
-    function logIn(email,password){
-        return signInWithEmailAndPassword(auth,email,password)
     }
+
+    async function logIn(email,password){
+        try{
+            await signInWithEmailAndPassword(auth,email,password)
+            return {success: true}
+        }catch(error){
+            console.log(error)
+            let errorMessage = "Login failed"
+ 
+        if (error.code === "auth/invalid-credential") {
+            errorMessage = "Incorrect email or password";
+        }
+        return { success:false,error: errorMessage }
+        }
+    }
+
     function logOut(){
         return signOut(auth)
     }
