@@ -5,6 +5,8 @@ import { createUserWithEmailAndPassword,
  } from "firebase/auth";
 import { useState } from "react";
 import { auth,db } from "../services/firebase";
+import { setPersistence, browserSessionPersistence, browserLocalPersistence, inMemoryPersistence } from "firebase/auth";
+
 
 const AuthContext = createContext();
 export function AuthContextProvider({children}) {
@@ -40,6 +42,7 @@ export function AuthContextProvider({children}) {
 
     async function logIn(email,password){
         try{
+            await setPersistence(auth, browserSessionPersistence);
             await signInWithEmailAndPassword(auth,email,password)
             return {success: true}
         }catch(error){

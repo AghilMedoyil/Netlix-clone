@@ -2,7 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import MovieItem from './MovieItem';
 import { MdChevronLeft,MdChevronRight } from "react-icons/md"
-const movieRow = ({title,url}) => {
+
+const MovieRow = ({title,url}) => {
     const rowId = Math.floor(Math.random() * 1000)
     const [movies,setMovies] = useState([]);
 
@@ -33,5 +34,5 @@ const slide = (offset) => {
   )
 }
 
-export default movieRow
+export default MovieRow
 
